@@ -1,0 +1,55 @@
+#!/usr/bin/env node
+
+/**
+ * Module dependencies.
+ */
+
+var program = require('commander');
+var fs = require('fs');
+var pkg = require('../package');
+var util = require('util');
+var signature = require('..');
+
+// options
+
+program
+  .version(pkg.version)
+  .option('-p, --padding <n>', 'Number of padding bottom', parseInt, 3);
+
+// examples
+
+program.on('--help', function(){
+  console.log('  Examples:');
+  console.log('');
+  console.log('    # stdin');
+  console.log('    $ sign > signature.txt');
+  console.log('');
+  console.log('    # Prepend to myfile.js');
+  console.log('    $ sign < signature.txt myfile.js');
+  console.log('');
+  console.log('    # Prepend to myfile.js with 10 lines of padding');
+  console.log('    $ sign < signature.txt -p 10 myfile.js');
+  console.log('');
+});
+
+// parse argv
+
+program.parse(process.argv);
+
+// process stdin
+
+var buf = '';
+process.stdin.setEncoding('utf8');
+process.stdin.on('data', function(chunk){ buf += chunk; });
+process.stdin.on('end', function(){
+  var out = signature(buf);
+  if(program.args.length){
+    program.args.forEach(function(f){
+      var text = fs.readFileSync(f, 'utf-8');
+      text = out + new Array(program.padding).join('\n') + text;
+      fs.writeFileSync(f, text, 'utf-8');
+    });
+  } else {
+    process.stdout.write(out);
+  }
+}).resume();

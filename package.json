@@ -1,0 +1,19 @@
+{
+  "name": "sign",
+  "dependencies": {
+    "commander": "~2.1.0",
+    "comment": "git://github.com/mnmly/comment",
+    "align-center": "git://github.com/mnmly/align-center"
+  },
+  "description": "Personal signature task",
+  "version": "0.0.0",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "bin": {
+    "sign": "./bin/sign"
+  },
+  "author": "",
+  "license": "MIT"
+}
